@@ -51,8 +51,14 @@ block.addEventListener('animationiteration', () => {
 
     // Increase animation speed over time
     animationDuration *= 0.95; // You can adjust the multiplier for the speed of increase
+    block.style.animationDuration = `${animationDuration / 1000}s`;
+
+    // Restart the animation
+    block.style.animation = 'none';
+    void block.offsetWidth; // Trigger reflow
     block.style.animation = `slide ${animationDuration / 1000}s infinite`;
 });
+
 
 var gameOverText = document.getElementById('game-over-text');
 
