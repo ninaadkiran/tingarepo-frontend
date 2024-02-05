@@ -37,7 +37,7 @@ window.onload = function() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
-    context = board.getContext("2d"); 
+    context = board.getContext("2d");
 
     birdImg = new Image();
     birdImg.src = "./flappybird.png";
@@ -52,7 +52,7 @@ window.onload = function() {
     bottomPipeImg.src = "./bottompipe.png";
 
     requestAnimationFrame(update);
-    setInterval(placePipes, 1500); 
+    setInterval(placePipes, 1500);
     document.addEventListener("keydown", moveBird);
 }
 
@@ -64,12 +64,14 @@ function update() {
     context.clearRect(0, 0, board.width, board.height);
 
     velocityY += gravity;
+  
     bird.y = Math.max(bird.y + velocityY, 0); 
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
     if (bird.y > board.height) {
         gameOver = true;
     }
+
 
     for (let i = 0; i < pipeArray.length; i++) {
         let pipe = pipeArray[i];
@@ -104,6 +106,7 @@ function placePipes() {
         return;
     }
 
+  
     let randomPipeY = pipeY - pipeHeight/4 - Math.random()*(pipeHeight/2);
     let openingSpace = board.height/4;
 
@@ -132,6 +135,7 @@ function moveBird(e) {
     if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
         velocityY = -6;
 
+       
         if (gameOver) {
             bird.y = birdY;
             pipeArray = [];
@@ -142,8 +146,8 @@ function moveBird(e) {
 }
 
 function detectCollision(a, b) {
-    return a.x < b.x + b.width &&   
+    return a.x < b.x + b.width &&  
            a.x + a.width > b.x &&   
            a.y < b.y + b.height &&  
-           a.y + a.height > b.y;   
+           a.y + a.height > b.y;    
 }
