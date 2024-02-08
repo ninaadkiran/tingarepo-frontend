@@ -17,7 +17,7 @@ function moveRight() {
 }
 
 function resetGame() {
-    block.style.animation = "none";
+    stopTimer(); // Stop the timer and display the score
     counter = 0;
     animationDuration = initialAnimationDuration;
 
@@ -26,7 +26,11 @@ function resetGame() {
     setTimeout(() => {
         gameOverText.style.opacity = 1;
     }, 10);
+
+    // Display the score in the game over text
+    gameOverText.innerHTML = "Game Over! Your Score: " + score + " seconds";
 }
+
 
 document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowLeft") {
@@ -42,6 +46,12 @@ var character = document.getElementById("character");
 var counter = 0;
 var initialAnimationDuration = 1000; // Initial animation duration in milliseconds
 var animationDuration = initialAnimationDuration;
+var startTime;
+var score = 0;
+var timerInterval;
+var timerStarted;
+var gameOverInterval;
+
 
 block.addEventListener('animationiteration', () => {
     var random = Math.floor(Math.random() * 3);
@@ -57,8 +67,42 @@ block.addEventListener('animationiteration', () => {
     block.style.animation = 'none';
     void block.offsetWidth; // Trigger reflow
     block.style.animation = `slide ${animationDuration / 1000}s infinite`;
+
+    // Update the score
+    if (!timerStarted) {
+        startTimer();
+        timerStarted = true;
+    }
 });
 
+function startTimer() {
+    startTime = new Date(); // Reset the start time
+    timerInterval = setInterval(displayScore, 1000); // Update score every second
+}
+
+function resetTimer() {
+    clearInterval(timerInterval); // Clear the interval that updates the score
+    startTime = 0; // Reset the start time
+    timerStarted = false; // Reset the timerStarted flag
+}
+
+
+// Add a function to stop the timer and display the score
+function stopTimer() {
+    clearInterval(timerInterval); // Clear the interval that updates the score
+    var endTime = new Date();
+    var timeDifference = endTime - startTime;
+    score = Math.floor(timeDifference / 10000); // Score is the time played in seconds
+    displayScore(); // Display the score
+    showGameOver(); // Show the game over text and restart button
+}
+// Add a function to display the score
+function displayScore() {
+    var endTime = new Date();
+    var timeDifference = endTime - startTime;
+    score = Math.floor(timeDifference / 1000); // Score is the time played in seconds
+    console.log("Your Score: " + score + " seconds");
+}
 
 var gameOverText = document.getElementById('game-over-text');
 
@@ -76,19 +120,31 @@ function restartGame() {
     // Reset game-related properties
     block.style.animation = "slide 1s infinite";
     counter = 0;
+    score = 0;
     animationDuration = initialAnimationDuration;
 
-    // Hide the game over text and restart button
+    // Hide the game over text (if it's visible)
     gameOverText.style.display = 'none';
-    restartButton.style.display = 'none';
+
+    // Hide the restart button (if it's visible)
+    var restartButton = document.getElementById('restart-button');
+    if (restartButton) {
+        restartButton.style.display = 'none';
+    }
+
+    // Reset the timer
+    resetTimer();
 
     // Resume the block animation
     block.style.animation = `slide ${animationDuration / 1000}s infinite`;
 
-    // Reset the interval for game over check
+    // Clear the interval for game over check (if it's running)
     clearInterval(gameOverInterval);
+    // Start checking for game over again
     gameOverInterval = setInterval(checkGameOver, 1);
 }
+
+
 
 // Add a function to check for game over
 function checkGameOver() {
@@ -96,13 +152,16 @@ function checkGameOver() {
     var blockLeft = parseInt(window.getComputedStyle(block).getPropertyValue("left"));
     var blockTop = parseInt(window.getComputedStyle(block).getPropertyValue("top"));
 
-    if (characterLeft == blockLeft && blockTop < 800 && blockTop > 600) {
+    // Adjust the range (you can tweak the value as needed)
+    var range = 30;
+
+    // Check if the character is within the range of the block's left position
+    if (characterLeft >= blockLeft - range && characterLeft <= blockLeft + range && blockTop < 800 && blockTop > 600) {
         // Game over
         clearInterval(gameOverInterval);
         showGameOver();
     }
 }
-
 // Replace the existing game over logic with a function
 function showGameOver() {
     // Stop the block animation
@@ -110,7 +169,10 @@ function showGameOver() {
 
     // Show the game over text
     gameOverText.style.display = 'block';
-    
+
     // Show the restart button
-    restartButton.style.display = 'block';
+    document.getElementById('restart-button').style.display = 'block';
 }
+document.getElementById('restart-button').addEventListener('click', function () {
+    restartGame();
+});
