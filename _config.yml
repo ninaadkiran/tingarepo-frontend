@@ -1,9 +1,9 @@
 title: Teacher 2.0
 description: "August 2023 to June 2024"
-owner_name: John Mortensen
+owner_name: Ninaad Kiran
 github_username: nighthawkcoders
-github_repo: "teacher_portfolio"
-baseurl: "/teacher_portfolio"
+github_repo: "Tingarepo-Frontend"
+baseurl: "/Tingarepo-Frontend"
 future: true
 remote_theme: jekyll/minima
 minima:
