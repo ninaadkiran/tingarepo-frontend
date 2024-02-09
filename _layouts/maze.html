@@ -2,16 +2,179 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
-    <title>Mazegame</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Game</title>
 </head>
-<body>
-    <div class="maze">
-    </div>
-    <div class="joystick">
-        <div class="joystick-head"></div>
-    </div>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
 
-    <script src="../script/javascript/mazegame.js"></script>
-</body>    
+    body{
+        background-color: lightgreen;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    h1{
+        font-size: 50px;
+        color:white;
+        margin-bottom: 20px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    #maze-container{
+        border: 10px solid black;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: max-content;
+        border-radius: 10px;
+    }
+    .row{
+        display: flex;
+    }
+    .cell{
+        width: 50px;;
+        height: 50px;
+        border: 1px solid black;
+        background-color: white;
+    }
+    .wall{
+        background-color: black;
+        border: 1px solid black;
+    }
+
+    #rat{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
+    #cheese{
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+    }
+
+    select{
+        width: 150px;
+        border-radius: 20px;
+        border: none;
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 10px 20px;
+    }
+
+</style>
+<body onload="createMaze()">
+    <h1>Maze Game</h1>
+    <select id="levelselect">
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+    </select>
+
+    <div id="maze-container">
+        <img src="rat.png" id="rat" 
+        width="50px" height="50px"
+        alt="rat">
+        <img src="food.png" id="cheese" alt="cheese"
+        width="50px" height="50px"
+        >
+
+        <!-- i=0 <div class="row">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div> -->
+        <!-- i=1 <div class="row">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div> -->
+        <!-- i=2 <div class="row">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div> -->
+        <!-- i=3 <div class="row">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div> -->
+
+    </div>
+</body>
+<script>
+    let level1 = [
+        [1,0,1,0],
+        [1,1,1,1],
+        [1,0,1,0],
+        [1,0,1,1]
+    ]
+
+    let level2 = [
+        [1,1,1,0,1,0],
+        [1,0,1,1,1,1],
+        [0,0,1,0,0,0],
+        [1,0,1,1,1,1],
+        [1,0,1,0,1,0],
+        [1,1,1,0,1,1]
+    ]
+
+    let level3 = [
+        [1,0,0,1,1,1,0,0,0,0],
+        [1,0,0,1,0,1,1,1,1,1],
+        [1,1,1,1,0,0,0,0,0,1],
+        [1,0,0,0,0,1,1,1,1,1],
+        [1,0,1,1,1,1,0,1,0,1],
+        [1,0,1,0,0,0,0,1,0,0],
+        [1,1,1,0,1,0,1,1,0,1],
+        [1,0,0,0,1,0,0,1,0,1],
+        [1,0,1,1,1,0,1,1,1,1],
+        [1,1,1,0,0,0,1,0,0,1]
+    ]
+
+    let mazearray = level1;
+    let leve1 = document.getElementById("levelselect")
+    level.addEventListener("change",function(){
+        let level = level.value;
+        if(level == 1){
+            mazearray = level1;
+        }
+    })
+
+    let maze = document.getElementById("maze-container");
+    let rat = document.getElementById("rat");
+    let food = document.getElementById("food")
+
+    function createMaze(){
+        for(let i=0; i<mazearray.length;i++){
+            let row = document.createElement("div");
+            row.classList.add("row");
+
+            for(let j = 0 ; j<mazearray[i].length; j++){
+                let cell = document.createElement("div");
+                cell.classList.add("cell");
+
+                if(mazearray[i][j] == 0){
+                    cell.classList.add("wall");
+                }
+                row.appendChild(cell);
+            }
+            maze.appendChild(row);
+        }
+    }
+</script>
 </html>
