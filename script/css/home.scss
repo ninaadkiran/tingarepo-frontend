@@ -1,0 +1,70 @@
+$bg-color: blue; // Background color
+$text-color: #fff; // Text color
+$star-count: 100; // Number of stars
+
+body {
+    background-color: $bg-color;
+    color: $text-color;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; // Hide overflowing stars
+    position: relative; // Needed for absolute positioning of stars
+}
+
+.galaxy-container {
+    text-align: center;
+    position: relative; // Ensure z-index works correctly
+    z-index: 1; // Place content above stars
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    background-color: #333;
+    color: $text-color;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #555;
+    }
+}
+
+// Star animation
+@keyframes twinkling {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+// Generate stars dynamically
+@for $i from 1 through $star-count {
+    .star#{$i} {
+        position: absolute;
+        top: random(100)%;
+        left: random(100)%;
+
+        width: 1px;
+        height: 1px;
+        background: white;
+        animation: twinkling $i*0.05s infinite;
+        animation-delay: random(50)*0.1s;
+    }
+}
