@@ -147,11 +147,18 @@
     ]
 
     let mazearray = level1;
-    let leve1 = document.getElementById("levelselect")
+    let level = document.getElementById("levelselect")
     level.addEventListener("change",function(){
         let level = level.value;
+        console.log(level1)
         if(level == 1){
             mazearray = level1;
+        }
+        if(level == 2){
+            mazearray = level2;
+        }
+        if(level == 3){
+            mazearray = level3;
         }
     })
 
