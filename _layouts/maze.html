@@ -82,10 +82,10 @@
     </select>
 
     <div id="maze-container">
-        <img src="rat.png" id="rat" 
+        <img src="/images/rat.png" id="rat" 
         width="50px" height="50px"
         alt="rat">
-        <img src="food.png" id="cheese" alt="cheese"
+        <img src="/images/cheese.png" id="cheese" alt="cheese"
         width="50px" height="50px"
         >
 
@@ -147,24 +147,37 @@
     ]
 
     let mazearray = level1;
-    let level = document.getElementById("levelselect")
-    level.addEventListener("change",function(){
-        let level = level.value;
-        console.log(level1)
-        if(level == 1){
+    let levelSelect = document.getElementById("levelselect");
+    levelSelect.addEventListener("change", function () {
+        let selectedLevel = parseInt(levelSelect.value);
+        console.log(selectedLevel);
+        if(selectedLevel == 1){
             mazearray = level1;
         }
-        if(level == 2){
+        if(selectedLevel == 2){
             mazearray = level2;
         }
-        if(level == 3){
+        if(selectedLevel == 3){
             mazearray = level3;
         }
+        maze.innerHTML = 
+        `<img src="/images/rat.png" id="rat" 
+        width="50px" height="50px"
+        alt="rat">
+        <img src="/images/cheese.png" id="cheese" alt="cheese"
+        width="50px" height="50px">`
+        createMaze();
     })
 
     let maze = document.getElementById("maze-container");
     let rat = document.getElementById("rat");
     let food = document.getElementById("food")
+
+    function setratposition( x,y ){
+        rat.style.top = x + "px";
+        rat.style.left = y + "px"
+    }
+    function setfoodposition(){}
 
     function createMaze(){
         for(let i=0; i<mazearray.length;i++){
