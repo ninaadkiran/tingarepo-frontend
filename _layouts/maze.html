@@ -175,9 +175,12 @@
 
     function setratposition( x,y ){
         rat.style.top = x + "px";
-        rat.style.left = y + "px"
+        rat.style.left = y + "px";
     }
-    function setfoodposition(){}
+    function setfoodposition( x,y ){
+        food.style.bottom = x + "px";
+        food.style.right = y + "px";
+    }
 
     function createMaze(){
         for(let i=0; i<mazearray.length;i++){
@@ -195,6 +198,7 @@
             }
             maze.appendChild(row);
         }
+
     }
 </script>
 </html>
