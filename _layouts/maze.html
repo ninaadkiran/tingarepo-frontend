@@ -4,73 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maze Game</title>
+    <link rel="stylesheet" href="/script/css/maze.css">
 </head>
 <style>
-    *{
-        margin: 0;
-        padding: 0;
-    }
-
-    body{
-        background-color: lightgreen;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        justify-content: center;
-        width: 100vw;
-        height: 100vh;
-    }
-
-    h1{
-        font-size: 50px;
-        color:white;
-        margin-bottom: 20px;
-        font-family: 'Courier New', Courier, monospace;
-    }
-
-    #maze-container{
-        border: 10px solid black;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: max-content;
-        border-radius: 10px;
-    }
-    .row{
-        display: flex;
-    }
-    .cell{
-        width: 50px;;
-        height: 50px;
-        border: 1px solid black;
-        background-color: white;
-    }
-    .wall{
-        background-color: black;
-        border: 1px solid black;
-    }
-
-    #rat{
-        position: absolute;
-        top: 0px;
-        left: 0px;
-    }
-
-    #cheese{
-        position: absolute;
-        bottom: 0px;
-        right: 0px;
-    }
-
-    select{
-        width: 150px;
-        border-radius: 20px;
-        border: none;
-        margin-bottom: 20px;
-        font-size: 20px;
-        font-family: 'Courier New', Courier, monospace;
-        padding: 10px 20px;
-    }
 
 </style>
 <body onload="createMaze()">
@@ -118,14 +54,14 @@
 </body>
 <script>
     let level1 = [
-        [1,0,1,0],
+        [2,0,1,0],
         [1,1,1,1],
         [1,0,1,0],
         [1,0,1,1]
     ]
 
     let level2 = [
-        [1,1,1,0,1,0],
+        [2,1,1,0,1,0],
         [1,0,1,1,1,1],
         [0,0,1,0,0,0],
         [1,0,1,1,1,1],
@@ -134,7 +70,7 @@
     ]
 
     let level3 = [
-        [1,0,0,1,1,1,0,0,0,0],
+        [2,0,0,1,1,1,0,0,0,0],
         [1,0,0,1,0,1,1,1,1,1],
         [1,1,1,1,0,0,0,0,0,1],
         [1,0,0,0,0,1,1,1,1,1],
@@ -145,6 +81,7 @@
         [1,0,1,1,1,0,1,1,1,1],
         [1,1,1,0,0,0,1,0,0,1]
     ]
+// 0 is wall, 1 is path, 2 is rat
 
     let mazearray = level1;
     let levelSelect = document.getElementById("levelselect");
@@ -171,7 +108,7 @@
 
     let maze = document.getElementById("maze-container");
     let rat = document.getElementById("rat");
-    let food = document.getElementById("food")
+    let food = document.getElementById("cheese")
 
     function setratposition( x,y ){
         rat.style.top = x + "px";
@@ -182,7 +119,7 @@
         food.style.right = y + "px";
     }
 
-    function createMaze(){
+    function createMaze() {
         for(let i=0; i<mazearray.length;i++){
             let row = document.createElement("div");
             row.classList.add("row");
@@ -194,11 +131,85 @@
                 if(mazearray[i][j] == 0){
                     cell.classList.add("wall");
                 }
+
+                if(i==0 && j==0){
+                    mazearray[i][j]=2;
+                }
                 row.appendChild(cell);
             }
             maze.appendChild(row);
         }
 
+        setratposition(0,0)
+        setfoodposition(0,0)
+        getratposition();
     }
+
+    function getratposition(){
+        let position = [-1,-1];
+        for(let i=0; i<mazearray.length;i++){
+            for(let j = 0 ; j<mazearray[i].length; j++){
+               if(mazearray[i][j] == 2){
+                position[0] = i;
+                position[1] = j;
+               } 
+            }
+        }
+
+        console.log(position);
+        return position;
+    }
+
+    document.addEventListener("keydown" , function (e){
+        let rat = document.getElementById("rat");
+        let food = document.getElementById("cheese");
+        let ratleft = rat.offsetLeft;
+        let rattop = rat.offsetTop;
+        let foodleft = food.offsetLeft;
+        let foodtop = food.offsetTop;
+        let ratposition = getratposition();
+
+        if(e.key == "ArrowRight" 
+        && ratleft < (mazearray.length - 1)*50 
+        && mazearray[ratposition[0]][ratposition[1]+1] == 1){
+                    ratleft += 50;
+                    rat.style.left = ratleft + "px";
+                    mazearray[ratposition[0]][ratposition[1]] = 1; //update rat's position
+                    mazearray[ratposition[0]][ratposition[1] + 1] = 2;
+                }
+                //console.log(mazearray);
+
+        if(e.key == "ArrowLeft" 
+        && ratleft > 0 
+        && mazearray[ratposition[0]][ratposition[1]-1] == 1){
+            ratleft -= 50;
+            rat.style.left = ratleft + "px";
+            mazearray[ratposition[0]][ratposition[1]] = 1;
+            mazearray[ratposition[0]][ratposition[1] - 1] = 2;
+        }
+
+        if(e.key == "ArrowUp"
+        && rattop > 0 
+        && mazearray[ratposition[0] - 1][ratposition[1]] == 1){
+            rattop -= 50;
+            rat.style.top = rattop + "px";
+            mazearray[ratposition[0]][ratposition[1]] = 1;
+            mazearray[ratposition[0] - 1][ratposition[1]] = 2;
+        }
+
+        if(e.key == "ArrowDown"
+        && rattop < (mazearray.length - 1) * 50
+        && mazearray[ratposition[0] + 1][ratposition[1]] == 1){
+            rattop += 50;
+            rat.style.top = rattop + "px";
+            mazearray[ratposition[0]][ratposition[1]] = 1;
+            mazearray[ratposition[0] + 1][ratposition[1]] = 2;
+        }
+
+        if(ratleft == foodleft && rattop == foodtop){
+            alert("You win!");
+        }
+
+    })
 </script>
 </html>
